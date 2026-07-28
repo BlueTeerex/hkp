@@ -39,36 +39,33 @@ def get_avatar_base64():
             encoded = base64.b64encode(data).decode()
             return f"data:image/jpeg;base64,{encoded}"
     else:
-        # 若找不到 hkp99.jpg 則使用預設備用頭像
         return "https://api.dicebear.com/7.x/bottts/svg?seed=HKP99Channel"
 
 
 AVATAR_IMAGE = get_avatar_base64()
 
 
-# 3. 高級 UI 美化 CSS
+# 3. 相容暗黑模式 (Dark Mode Compatible) CSS
 def inject_custom_css():
     st.markdown(
         """
         <style>
-        .main {
-            background-color: #fafafa;
-        }
+        /* 1. 頂部 Banner (橘色漸層 + 強制白色文字) */
         .header-container {
             display: flex;
             align-items: center;
-            background: linear-gradient(135deg, #1E88E5 0%, #1565C0 100%);
+            background: linear-gradient(135deg, #FF8C00 0%, #FF5722 100%);
             padding: 1.8rem 2rem;
             border-radius: 16px;
-            color: white;
-            box-shadow: 0 8px 20px rgba(30, 136, 229, 0.25);
+            color: #ffffff !important;
+            box-shadow: 0 8px 20px rgba(255, 140, 0, 0.3);
             margin-bottom: 2rem;
         }
         .header-avatar {
             width: 90px;
             height: 90px;
             border-radius: 50%;
-            border: 3px solid rgba(255, 255, 255, 0.8);
+            border: 3px solid rgba(255, 255, 255, 0.9);
             margin-right: 1.5rem;
             object-fit: cover;
             background-color: white;
@@ -78,35 +75,66 @@ def inject_custom_css():
             font-weight: 800;
             margin: 0;
             letter-spacing: 0.5px;
+            color: #ffffff !important;
         }
         .header-subtitle {
             font-size: 1.05rem;
-            opacity: 0.9;
+            opacity: 0.95;
             margin-top: 0.3rem;
+            color: #ffffff !important;
         }
+
+        /* 2. 通用資訊卡片 (動態適應深淺主題) */
         .custom-card {
-            background-color: #ffffff;
+            background-color: var(--secondary-background-color, #ffffff);
             border-radius: 12px;
             padding: 1.5rem;
             margin-bottom: 1.2rem;
-            border: 1px solid #e0e0e0;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+            border: 1px solid rgba(255, 152, 0, 0.3);
+            border-left: 5px solid #FF9800;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
         }
+        .custom-card h3, .custom-card p, .custom-card b {
+            color: var(--text-color, #212121) !important;
+        }
+
+        /* 3. Minecraft 專用卡片 (動態適應深淺主題) */
         .mc-theme-card {
-            background: linear-gradient(135deg, #f1f8e9 0%, #dedef0 100%);
+            background-color: var(--secondary-background-color, #fff3e0);
             border-radius: 12px;
             padding: 1.5rem;
             margin-bottom: 1.2rem;
-            border-left: 6px solid #4CAF50;
-            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.12);
+            border: 1px solid rgba(255, 87, 34, 0.3);
+            border-left: 6px solid #FF5722;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
         }
+        .mc-theme-card h3, .mc-theme-card p {
+            color: var(--text-color, #212121) !important;
+        }
+
+        /* 4. Primary 亮橘色按鈕 */
+        div.stButton > button[kind="primary"], 
+        div.stLinkButton > a[data-testid="stBaseButton-primary"] {
+            background-color: #FF8C00 !important;
+            border-color: #FF8C00 !important;
+            color: #ffffff !important;
+        }
+        div.stButton > button[kind="primary"]:hover, 
+        div.stLinkButton > a[data-testid="stBaseButton-primary"]:hover {
+            background-color: #E67E00 !important;
+            border-color: #E67E00 !important;
+            color: #ffffff !important;
+        }
+
+        /* 5. 頁腳文字 */
         .footer-text {
             font-size: 0.85rem;
-            color: #757575;
+            color: var(--text-color, #757575);
+            opacity: 0.75;
             text-align: center;
             margin-top: 3rem;
             padding-top: 1rem;
-            border-top: 1px solid #e0e0e0;
+            border-top: 1px solid rgba(128, 128, 128, 0.2);
         }
         </style>
     """,
@@ -223,7 +251,7 @@ elif menu == "🎮 Minecraft HKP":
     st.subheader("📂 雲端資料夾即時預覽與下載")
     st.markdown(
         f"""
-    <div style="border: 2px solid #4CAF50; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+    <div style="border: 2px solid #FF8C00; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(255, 140, 0, 0.15);">
         <iframe src="{GDRIVE_EMBED_URL}" width="100%" height="550" frameborder="0"></iframe>
     </div>
     """,
