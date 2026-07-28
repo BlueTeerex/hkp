@@ -1,7 +1,8 @@
+import base64
 from datetime import datetime
+import os
 import pytz
 import streamlit as st
-import streamlit.components.v1 as components
 
 # 1. 頁面基本配置
 st.set_page_config(
@@ -10,7 +11,7 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded",
 )
-AVATAR_IMAGE = "hkp99.jpg"
+
 # 時區設定（Macao / Asia/Macau）
 user_tz = pytz.timezone("Asia/Macau")
 current_time_str = datetime.now(user_tz).strftime("%Y-%m-%d %H:%M:%S (%Z)")
@@ -28,21 +29,31 @@ YT_URL = "https://www.youtube.com/@hkp_99channel"
 THREADS_URL = "https://www.threads.net/@hkp_99channel"
 BILIBILI_URL = "https://space.bilibili.com"
 
-# 頭像圖片路徑（預設為質感預設圖，若在 GitHub 上傳 avatar.png 可直接替換）
-AVATAR_IMAGE = "https://api.dicebear.com/7.x/bottts/svg?seed=HKP99Channel"
+
+# 2. 自動讀取並轉換 hkp99.jpg 頭像
+def get_avatar_base64():
+    image_path = "hkp99.jpg"
+    if os.path.exists(image_path):
+        with open(image_path, "rb") as f:
+            data = f.read()
+            encoded = base64.b64encode(data).decode()
+            return f"data:image/jpeg;base64,{encoded}"
+    else:
+        # 若找不到 hkp99.jpg 則使用預設備用頭像
+        return "https://api.dicebear.com/7.x/bottts/svg?seed=HKP99Channel"
 
 
-# 2. 高級 UI 美化 CSS
+AVATAR_IMAGE = get_avatar_base64()
+
+
+# 3. 高級 UI 美化 CSS
 def inject_custom_css():
     st.markdown(
         """
         <style>
-        /* 全局字體與背景美化 */
         .main {
             background-color: #fafafa;
         }
-        
-        /* 頂部 Header Banner */
         .header-container {
             display: flex;
             align-items: center;
@@ -73,8 +84,6 @@ def inject_custom_css():
             opacity: 0.9;
             margin-top: 0.3rem;
         }
-
-        /* 卡片元件設計 */
         .custom-card {
             background-color: #ffffff;
             border-radius: 12px;
@@ -82,13 +91,7 @@ def inject_custom_css():
             margin-bottom: 1.2rem;
             border: 1px solid #e0e0e0;
             box-shadow: 0 4px 12px rgba(0,0,0,0.04);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
-        .custom-card:hover {
-            box-shadow: 0 6px 16px rgba(0,0,0,0.08);
-        }
-        
-        /* Minecraft 專用主題卡片 */
         .mc-theme-card {
             background: linear-gradient(135deg, #f1f8e9 0%, #dedef0 100%);
             border-radius: 12px;
@@ -97,8 +100,6 @@ def inject_custom_css():
             border-left: 6px solid #4CAF50;
             box-shadow: 0 4px 12px rgba(76, 175, 80, 0.12);
         }
-
-        /* 頁腳文字 */
         .footer-text {
             font-size: 0.85rem;
             color: #757575;
@@ -115,9 +116,8 @@ def inject_custom_css():
 
 inject_custom_css()
 
-# 3. 側邊欄設計 (Sidebar)
+# 4. 側邊欄設計 (Sidebar)
 with st.sidebar:
-    # 顯示頭像與頻道名稱
     col_av1, col_av2 = st.columns([1, 2])
     with col_av1:
         st.image(AVATAR_IMAGE, width=70)
@@ -126,8 +126,6 @@ with st.sidebar:
         st.caption("@hkp_99channel")
 
     st.markdown("---")
-
-    # 僅保留兩頁分頁
     menu = st.radio("📌 導航選單", ["🏠 主頁", "🎮 Minecraft HKP"])
 
     st.markdown("---")
@@ -144,10 +142,9 @@ with st.sidebar:
     st.markdown("---")
     st.caption(f"🕒 **系統時間**: {current_time_str}")
 
-# 4. 主頁面內容
+# 5. 主頁面內容
 
 if menu == "🏠 主頁":
-    # 頂部大 Banner（含頭像與名稱）
     st.markdown(
         f"""
     <div class="header-container">
@@ -161,7 +158,6 @@ if menu == "🏠 主頁":
         unsafe_allow_html=True,
     )
 
-    # 官方社群平台快速連結
     st.subheader("🔗 官方社群平台直接連結")
     col_s1, col_s2, col_s3, col_s4 = st.columns(4)
     with col_s1:
@@ -224,10 +220,7 @@ elif menu == "🎮 Minecraft HKP":
 
     st.markdown("---")
 
-    # 內嵌 Google Drive 檔案瀏覽器
     st.subheader("📂 雲端資料夾即時預覽與下載")
-
-    # 使用 iframe 嵌入 Google Drive 資料夾
     st.markdown(
         f"""
     <div style="border: 2px solid #4CAF50; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
@@ -238,7 +231,6 @@ elif menu == "🎮 Minecraft HKP":
     )
 
     st.write("")
-    # 備用跳轉按鈕
     st.link_button(
         "↗️ 在新頁面開啟 Google Drive 雲端硬碟",
         GDRIVE_DIRECT_URL,
@@ -253,7 +245,7 @@ elif menu == "🎮 Minecraft HKP":
     with tab1:
         st.subheader("🗺️ 資料夾現有資源項目")
         st.markdown(
-            f"""
+            """
         在上方雲端資料夾中包含以下檔案資源：
         * **🏫 濠江英才校園地圖檔案** (`.zip` / `.mcworld`)
         * **⚔️ 冒險地圖與闖關關卡**
@@ -271,11 +263,11 @@ elif menu == "🎮 Minecraft HKP":
            - 按下 `Win + R` 鍵，輸入 `%appdata%\\.minecraft\\saves` 並按下 Enter。
            - 將解壓後的資料夾複製到 `saves` 資料夾中即可。
         2. **基岩版 (Bedrock / 手機版 / Windows 10) 安裝步驟**：
-           - 下載 `.mcworld` 檔案後直接點擊，遊戲將自動啟動並匯入地圖。
+           - 下載 `.mcworld` 檔案後自動啟動匯入。
         """
         )
 
-# 5. 頁腳 (Footer)
+# 6. 頁腳 (Footer)
 st.markdown(
     f'<div class="footer-text">© 2026 濠江英才九九頻道 (HKP 99 Channel) | Instagram & YouTube: @hkp_99channel | Powered by Streamlit | 最後更新：{current_time_str}</div>',
     unsafe_allow_html=True,
