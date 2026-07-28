@@ -1,6 +1,7 @@
 from datetime import datetime
 import pytz
 import streamlit as st
+import streamlit.components.v1 as components
 
 # 1. 頁面基本配置
 st.set_page_config(
@@ -14,49 +15,97 @@ st.set_page_config(
 user_tz = pytz.timezone("Asia/Macau")
 current_time_str = datetime.now(user_tz).strftime("%Y-%m-%d %H:%M:%S (%Z)")
 
-# 核心連結設定 (@hkp_99channel)
-DRIVE_MINECRAFT_URL = "https://drive.google.com/drive/folders/1bikY29LxzVjKP5pFBPZpoK_l9OBvZz7P?usp=drive_link"
+# 核心連結與 Google Drive 設定
+GDRIVE_FOLDER_ID = "1bikY29LxzVjKP5pFBPZpoK_l9OBvZz7P"
+GDRIVE_DIRECT_URL = f"https://drive.google.com/drive/folders/{GDRIVE_FOLDER_ID}?usp=drive_link"
+GDRIVE_EMBED_URL = (
+    f"https://drive.google.com/embeddedfolderview?id={GDRIVE_FOLDER_ID}#grid"
+)
+
+# 社群連結 (@hkp_99channel)
 IG_URL = "https://www.instagram.com/hkp_99channel/"
 YT_URL = "https://www.youtube.com/@hkp_99channel"
 THREADS_URL = "https://www.threads.net/@hkp_99channel"
-BILIBILI_URL = "https://space.bilibili.com"  # 可在後續替換為精確UID空間頁
+BILIBILI_URL = "https://space.bilibili.com"
+
+# 頭像圖片路徑（預設為質感預設圖，若在 GitHub 上傳 avatar.png 可直接替換）
+AVATAR_IMAGE = "https://api.dicebear.com/7.x/bottts/svg?seed=HKP99Channel"
 
 
-# 自訂 CSS 樣式
+# 2. 高級 UI 美化 CSS
 def inject_custom_css():
     st.markdown(
         """
         <style>
-        .main-header {
+        /* 全局字體與背景美化 */
+        .main {
+            background-color: #fafafa;
+        }
+        
+        /* 頂部 Header Banner */
+        .header-container {
+            display: flex;
+            align-items: center;
+            background: linear-gradient(135deg, #1E88E5 0%, #1565C0 100%);
+            padding: 1.8rem 2rem;
+            border-radius: 16px;
+            color: white;
+            box-shadow: 0 8px 20px rgba(30, 136, 229, 0.25);
+            margin-bottom: 2rem;
+        }
+        .header-avatar {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            border: 3px solid rgba(255, 255, 255, 0.8);
+            margin-right: 1.5rem;
+            object-fit: cover;
+            background-color: white;
+        }
+        .header-title {
             font-size: 2.2rem;
-            font-weight: 700;
-            color: #1E88E5;
-            margin-bottom: 0.2rem;
+            font-weight: 800;
+            margin: 0;
+            letter-spacing: 0.5px;
         }
-        .sub-header {
-            font-size: 1.1rem;
-            color: #555555;
-            margin-bottom: 1.5rem;
+        .header-subtitle {
+            font-size: 1.05rem;
+            opacity: 0.9;
+            margin-top: 0.3rem;
         }
-        .card {
-            background-color: #f8f9fa;
-            border-radius: 10px;
+
+        /* 卡片元件設計 */
+        .custom-card {
+            background-color: #ffffff;
+            border-radius: 12px;
             padding: 1.5rem;
             margin-bottom: 1.2rem;
-            border-left: 5px solid #1E88E5;
+            border: 1px solid #e0e0e0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
-        .mc-card {
-            background-color: #f1f8e9;
-            border-radius: 10px;
+        .custom-card:hover {
+            box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+        }
+        
+        /* Minecraft 專用主題卡片 */
+        .mc-theme-card {
+            background: linear-gradient(135deg, #f1f8e9 0%, #dedef0 100%);
+            border-radius: 12px;
             padding: 1.5rem;
             margin-bottom: 1.2rem;
-            border-left: 5px solid #4CAF50;
+            border-left: 6px solid #4CAF50;
+            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.12);
         }
+
+        /* 頁腳文字 */
         .footer-text {
             font-size: 0.85rem;
-            color: #888888;
+            color: #757575;
             text-align: center;
             margin-top: 3rem;
+            padding-top: 1rem;
+            border-top: 1px solid #e0e0e0;
         }
         </style>
     """,
@@ -66,41 +115,53 @@ def inject_custom_css():
 
 inject_custom_css()
 
-# 2. 側邊欄導航與社交媒體連結
-st.sidebar.title("濠江英才九九頻道")
-st.sidebar.caption("HKP 99 Channel 官方網站")
-st.sidebar.markdown("---")
+# 3. 側邊欄設計 (Sidebar)
+with st.sidebar:
+    # 顯示頭像與頻道名稱
+    col_av1, col_av2 = st.columns([1, 2])
+    with col_av1:
+        st.image(AVATAR_IMAGE, width=70)
+    with col_av2:
+        st.markdown("**濠江英才九九頻道**")
+        st.caption("@hkp_99channel")
 
-# 僅保留兩個分頁
-menu = st.sidebar.radio("📌 導航選單", ["🏠 主頁", "🎮 Minecraft HKP"])
+    st.markdown("---")
 
-st.sidebar.markdown("---")
-st.sidebar.subheader("🌐 關注九九頻道 (@hkp_99channel)")
-st.sidebar.markdown(
-    f"""
-* 🔴 [YouTube 頻道]({YT_URL})
-* 📸 [Instagram]({IG_URL})
-* 🧵 [Threads]({THREADS_URL})
-* 📺 [Bilibili 嗶哩嗶哩]({BILIBILI_URL})
-"""
-)
+    # 僅保留兩頁分頁
+    menu = st.radio("📌 導航選單", ["🏠 主頁", "🎮 Minecraft HKP"])
 
-st.sidebar.markdown("---")
-st.sidebar.caption(f"🕒 **系統時間**: {current_time_str}")
+    st.markdown("---")
+    st.markdown("### 🌐 關注我們")
+    st.markdown(
+        f"""
+    * 🔴 [YouTube 頻道]({YT_URL})
+    * 📸 [Instagram]({IG_URL})
+    * 🧵 [Threads]({THREADS_URL})
+    * 📺 [Bilibili 嗶哩嗶哩]({BILIBILI_URL})
+    """
+    )
 
-# 3. 各頁面邏輯 implementation
+    st.markdown("---")
+    st.caption(f"🕒 **系統時間**: {current_time_str}")
+
+# 4. 主頁面內容
 
 if menu == "🏠 主頁":
+    # 頂部大 Banner（含頭像與名稱）
     st.markdown(
-        '<div class="main-header">歡迎來到 濠江英才九九頻道 (HKP 99 Channel)</div>',
-        unsafe_allow_html=True,
-    )
-    st.markdown(
-        '<div class="sub-header">匯聚最新頻道資訊、社群平台動態與 Minecraft HKP 校園專案</div>',
+        f"""
+    <div class="header-container">
+        <img src="{AVATAR_IMAGE}" class="header-avatar">
+        <div>
+            <div class="header-title">濠江英才九九頻道</div>
+            <div class="header-subtitle">HKP 99 Channel 官方網站 | 校園創作與 Minecraft 專案展示基地</div>
+        </div>
+    </div>
+    """,
         unsafe_allow_html=True,
     )
 
-    # 官方社交媒體快速入口
+    # 官方社群平台快速連結
     st.subheader("🔗 官方社群平台直接連結")
     col_s1, col_s2, col_s3, col_s4 = st.columns(4)
     with col_s1:
@@ -124,16 +185,15 @@ if menu == "🏠 主頁":
 
     st.markdown("---")
 
-    # 頻道簡介與快速捷徑
     col1, col2 = st.columns([2, 1])
 
     with col1:
         st.markdown(
             """
-        <div class="card">
+        <div class="custom-card">
             <h3>📢 關於 濠江英才九九頻道</h3>
             <p>我們是由濠江英才學生團隊營運的創作頻道！在這裡你會看到校園生活、創作專題、短影音以及同學們聯手打造的 <b>Minecraft HKP 校園建築與冒險地圖專案</b>。</p>
-            <p>歡迎追蹤我們的社群平台 <b>@hkp_99channel</b>，鎖定最新動態！</p>
+            <p>歡迎關注我們的各大社群平台 <b>@hkp_99channel</b>，鎖定第一手消息！</p>
         </div>
         """,
             unsafe_allow_html=True,
@@ -142,16 +202,16 @@ if menu == "🏠 主頁":
     with col2:
         st.markdown(
             """
-        <div class="mc-card">
-            <h3>🎮 Minecraft 下載捷徑</h3>
-            <p>想遊玩濠江英才校園地圖或下載專屬資源？</p>
+        <div class="mc-theme-card">
+            <h3>🎮 Minecraft HKP</h3>
+            <p>想下載濠江英才 1:1 校園地圖或地圖組件？</p>
         </div>
         """,
             unsafe_allow_html=True,
         )
         st.link_button(
-            "🚀 開啟 Google Drive 雲端下載庫",
-            DRIVE_MINECRAFT_URL,
+            "🚀 前往 Minecraft 下載區",
+            GDRIVE_DIRECT_URL,
             type="primary",
             use_container_width=True,
         )
@@ -159,25 +219,29 @@ if menu == "🏠 主頁":
 elif menu == "🎮 Minecraft HKP":
     st.title("🎮 Minecraft HKP 專屬下載區")
     st.write(
-        "歡迎來到 Minecraft HKP 專區！同學們可以直接開啟 Google Drive 雲端資料夾取得所有最新的校園地圖、材質包與模組資源。"
+        "歡迎來到 Minecraft HKP 專區！以下已直接嵌入頻道官方 Google Drive 雲端資料夾，你可以直接在此瀏覽並下載最新的地圖與檔案。"
     )
 
     st.markdown("---")
 
-    # 主要 Google Drive 下載入口卡片
+    # 內嵌 Google Drive 檔案瀏覽器
+    st.subheader("📂 雲端資料夾即時預覽與下載")
+
+    # 使用 iframe 嵌入 Google Drive 資料夾
     st.markdown(
-        """
-    <div class="mc-card">
-        <h3>📂 濠江英才九九頻道 Minecraft 雲端資料夾</h3>
-        <p>包含校園 1:1 還原地圖、冒險關卡、專屬皮膚與材質包，點擊下方按鈕即可開啟 Google Drive 雲端硬碟直接下載！</p>
+        f"""
+    <div style="border: 2px solid #4CAF50; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+        <iframe src="{GDRIVE_EMBED_URL}" width="100%" height="550" frameborder="0"></iframe>
     </div>
     """,
         unsafe_allow_html=True,
     )
 
+    st.write("")
+    # 備用跳轉按鈕
     st.link_button(
-        "🚀 前往 Google Drive 資源下載庫",
-        DRIVE_MINECRAFT_URL,
+        "↗️ 在新頁面開啟 Google Drive 雲端硬碟",
+        GDRIVE_DIRECT_URL,
         type="primary",
         use_container_width=True,
     )
@@ -190,13 +254,11 @@ elif menu == "🎮 Minecraft HKP":
         st.subheader("🗺️ 資料夾現有資源項目")
         st.markdown(
             f"""
-        在 Google Drive 資料夾中包含以下檔案資源：
+        在上方雲端資料夾中包含以下檔案資源：
         * **🏫 濠江英才校園地圖檔案** (`.zip` / `.mcworld`)
         * **⚔️ 冒險地圖與闖關關卡**
         * **👕 專屬皮膚包與材質包資源**
         * **🧩 支援組件與模組**
-
-        👉 [點我開啟 Google Drive 雲端資料夾]({DRIVE_MINECRAFT_URL})
         """
         )
 
@@ -213,8 +275,7 @@ elif menu == "🎮 Minecraft HKP":
         """
         )
 
-# 4. 頁腳 (Footer)
-st.markdown("---")
+# 5. 頁腳 (Footer)
 st.markdown(
     f'<div class="footer-text">© 2026 濠江英才九九頻道 (HKP 99 Channel) | Instagram & YouTube: @hkp_99channel | Powered by Streamlit | 最後更新：{current_time_str}</div>',
     unsafe_allow_html=True,
