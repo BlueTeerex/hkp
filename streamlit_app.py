@@ -10,7 +10,7 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded",
 )
-
+AVATAR_IMAGE = "hkp99.jpg"
 # 時區設定（Macao / Asia/Macau）
 user_tz = pytz.timezone("Asia/Macau")
 current_time_str = datetime.now(user_tz).strftime("%Y-%m-%d %H:%M:%S (%Z)")
