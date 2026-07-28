@@ -14,6 +14,10 @@ st.set_page_config(
 user_tz = pytz.timezone("Asia/Macau")
 current_time_str = datetime.now(user_tz).strftime("%Y-%m-%d %H:%M:%S (%Z)")
 
+# 核心連結設定
+DRIVE_MINECRAFT_URL = "https://drive.google.com/drive/folders/1bikY29LxzVjKP5pFBPZpoK_l9OBvZz7P?usp=drive_link"
+IG_URL = "https://www.instagram.com/hkp_99channel/"
+
 
 # 自訂 CSS 樣式
 def inject_custom_css():
@@ -44,15 +48,6 @@ def inject_custom_css():
             padding: 1.2rem;
             margin-bottom: 1rem;
             border-left: 4px solid #4CAF50;
-        }
-        .social-btn {
-            display: inline-block;
-            padding: 0.5rem 1rem;
-            margin: 0.2rem;
-            border-radius: 5px;
-            color: white;
-            text-decoration: none;
-            font-weight: bold;
         }
         .footer-text {
             font-size: 0.85rem;
@@ -91,13 +86,13 @@ menu = st.sidebar.radio(
 st.sidebar.markdown("---")
 st.sidebar.subheader("🌐 關注九九頻道")
 st.sidebar.markdown(
-    """
-* 🔴 [YouTube 頻道](#)
-* 📸 [Instagram (IG)](#)
-* 🔵 [Facebook 專頁](#)
-* 🧵 [Threads](#)
-* 🎵 [抖音 (TikTok)](#)
-* 📺 [Bilibili 嗶哩嗶哩](#)
+    f"""
+* 📸 [Instagram (@hkp_99channel)]({IG_URL})
+* 🔴 [YouTube 頻道](https://www.youtube.com)
+* 🔵 [Facebook 專頁](https://www.facebook.com)
+* 🧵 [Threads](https://www.threads.net/@hkp_99channel)
+* 🎵 [抖音 (TikTok)](https://www.douyin.com)
+* 📺 [Bilibili 嗶哩嗶哩](https://www.bilibili.com)
 """
 )
 
@@ -120,13 +115,13 @@ if menu == "🏠 頻道首頁":
     st.subheader("🔗 官方社交媒體平台")
     col_s1, col_s2, col_s3, col_s4, col_s5, col_s6 = st.columns(6)
     with col_s1:
-        st.link_button("🔴 YouTube", "https://www.youtube.com")
+        st.link_button("📸 Instagram", IG_URL)
     with col_s2:
-        st.link_button("📸 Instagram", "https://www.instagram.com")
+        st.link_button("🔴 YouTube", "https://www.youtube.com")
     with col_s3:
         st.link_button("🔵 Facebook", "https://www.facebook.com")
     with col_s4:
-        st.link_button("🧵 Threads", "https://www.threads.net")
+        st.link_button("🧵 Threads", "https://www.threads.net/@hkp_99channel")
     with col_s5:
         st.link_button("🎵 抖音", "https://www.douyin.com")
     with col_s6:
@@ -138,108 +133,76 @@ if menu == "🏠 頻道首頁":
 
     with col1:
         st.subheader("🔥 最新熱門推介")
-        st.video(
-            "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
-        )  # 可替換為實際 YouTube / Bilibili 影片連結
+        st.video("https://www.youtube.com/watch?v=dQw4w9WgXcQ")
         st.markdown(
-            "**【濠江英才九九頻道】最新作品發表**\n\n歡迎追蹤我們的社交平台並訂閱頻道，第一時間獲取最新動態！"
+            "**【濠江英才九九頻道】最新作品發表**\n\n歡迎追蹤我們的 Instagram [@hkp_99channel](https://www.instagram.com/hkp_99channel/)，第一時間獲取最新動態與花絮！"
         )
 
     with col2:
         st.subheader("📊 頻道速覽")
-        st.metric(label="社群關注總數", value="15,000+", delta="+500 本週")
-        st.metric(label="Minecraft 檔案下載量", value="3,200+", delta="+180 本週")
+        st.metric(label="Instagram 帳號", value="@hkp_99channel")
+        st.metric(label="Minecraft 資源", value="開放下載中")
 
         st.info(
-            "💡 **提示**：點擊左側選單可前往「**Minecraft HKP 下載區**」取得最新地圖與模組檔案！"
+            "💡 **提示**：點擊左側選單可前往「**Minecraft HKP 下載區**」取得最新的 Google Drive 地圖與模組檔案！"
         )
 
 elif menu == "🎮 Minecraft HKP 下載區":
     st.title("🎮 Minecraft HKP 專屬下載區")
     st.write(
-        "歡迎來到 Minecraft HKP 下載專區！同學們可以在這裡下載由九九頻道團隊或同學製作的 Minecraft 地圖、材質包與模組資源。"
+        "歡迎來到 Minecraft HKP 下載專區！同學們可以直接前往官方 Google Drive 雲端資料夾取得所有最新地圖、材質包與模組資源。"
     )
 
     st.markdown("---")
 
-    tab1, tab2, tab3 = st.tabs(
-        ["🗺️ 專案地圖下載", "🧩 模組與材質包", "📖 安裝與使用教學"]
+    # 主要 Google Drive 下載入口卡片
+    st.markdown(
+        """
+    <div class="mc-card">
+        <h3>📂 濠江英才九九頻道 Minecraft 雲端資料夾</h3>
+        <p>包含校園地圖、冒險關卡、專屬皮膚與材質包，點擊下方按鈕即可開啟 Google Drive 進行下載！</p>
+    </div>
+    """,
+        unsafe_allow_html=True,
     )
 
+    col_dl1, col_dl2 = st.columns([1, 2])
+    with col_dl1:
+        st.link_button(
+            "🚀 前往 Google Drive 資源下載庫",
+            DRIVE_MINECRAFT_URL,
+            type="primary",
+            use_container_width=True,
+        )
+
+    st.markdown("---")
+
+    tab1, tab2 = st.tabs(["📦 雲端資源說明", "📖 安裝與使用教學"])
+
     with tab1:
-        st.subheader("🗺️ 濠江英才校園 Minecraft 地圖與冒險關卡")
-
-        col_mc1, col_mc2 = st.columns(2)
-
-        with col_mc1:
-            st.markdown(
-                """
-            <div class="mc-card">
-                <h3>🏫 濠江英才校園 1:1 還原地圖 (v1.2)</h3>
-                <p><b>適用版本：</b>Java 版 1.20.1+</p>
-                <p><b>檔案大小：</b>45 MB</p>
-                <p><b>簡介：</b>精心打造的校園建築再現，包含教學樓、禮堂與運動場，歡迎同學們下載探索！</p>
-            </div>
-            """,
-                unsafe_allow_html=True,
-            )
-            # 範例下載按鈕（可放置實際檔案連結或雲端硬碟網址）
-            st.download_button(
-                label="⬇️ 下載校園地圖 (.zip)",
-                data=b"Minecraft HKP Campus Map Dummy Content",
-                file_name="Minecraft_HKP_Campus_v1.2.zip",
-                mime="application/zip",
-            )
-            st.link_button(
-                "🔗 備用雲端下載 (Google Drive / 網盤)", "https://drive.google.com"
-            )
-
-        with col_mc2:
-            st.markdown(
-                """
-            <div class="mc-card">
-                <h3>⚔️ HKP 99 闖關冒險地圖 Vol.1</h3>
-                <p><b>適用版本：</b>Java / 基岩版 (Bedrock)</p>
-                <p><b>檔案大小：</b>28 MB</p>
-                <p><b>簡介：</b>含有解謎與跑酷元素的特色地圖，適合單人或多合同學一起挑戰！</p>
-            </div>
-            """,
-                unsafe_allow_html=True,
-            )
-            st.download_button(
-                label="⬇️ 下載冒險地圖 (.mcworld)",
-                data=b"Minecraft HKP Adventure Map Dummy Content",
-                file_name="HKP_Adventure_Vol1.mcworld",
-                mime="application/octet-stream",
-            )
-            st.link_button(
-                "🔗 備用雲端下載 (Google Drive / 網盤)", "https://drive.google.com"
-            )
-
-    with tab2:
-        st.subheader("🧩 專屬資源包與模組組件")
-
+        st.subheader("🗺️ 資料夾現有資源項目")
         st.markdown(
-            """
-        * **校園專屬校服皮膚包 (Skin Pack)**
-            * 提供濠江英才校服風格的玩家皮膚！
-            * [⬇️ 下載皮膚包 (.zip)](#)
-        * **HKP 99 頻道光影與材質建議包**
-            * 提升畫面品質，呈現最佳校園場景效果。
-            * [⬇️ 下載材質包 (.zip)](#)
+            f"""
+        你在雲端資料夾中可以找到以下內容：
+        * **🏫 濠江英才校園地圖檔案** (`.zip` / `.mcworld`)
+        * **⚔️ 冒險地圖與闖關關卡**
+        * **👕 專屬皮膚包與材質包資源**
+        * **🧩 相容模組組件**
+
+        👉 [點我直接開啟 Google Drive 資料夾]({DRIVE_MINECRAFT_URL})
         """
         )
 
-    with tab3:
+    with tab2:
         st.subheader("📖 檔案安裝指引")
         st.markdown(
             """
         1. **Java 版地圖安裝步驟**：
-           - 下載 `.zip` 檔案並解壓縮。
+           - 從 Google Drive 下載 `.zip` 檔案並解壓縮。
            - 按下 `Win + R` 鍵，輸入 `%appdata%\\.minecraft\\saves` 並按下 Enter。
            - 將解壓後的資料夾複製到 `saves` 資料夾中即可。
         2. **基岩版 (Bedrock / 手機版 / Windows 10) 安裝步驟**：
-           - 直接點擊下載的 `.mcworld` 檔案，遊戲將自動啟動並匯入地圖。
+           - 下載 `.mcworld` 檔案後直接點擊，遊戲將自動啟動並匯入地圖。
         """
         )
 
@@ -263,7 +226,7 @@ elif menu == "📹 節目影片":
             "desc": "幕後花絮：同學們是如何在 Minecraft 中建造我們的校園？",
         },
         {
-            "title": "九九頻道短影音精選 (抖音/Threads 特輯)",
+            "title": "九九頻道短影音精選 (IG Reels / Threads 特輯)",
             "category": "短影音",
             "date": "2026-07-01",
             "desc": "匯集短影音平台熱門內容與爆笑花絮。",
@@ -286,14 +249,14 @@ elif menu == "📢 頻道公告":
     st.title("📢 最新公告與活動行程")
 
     st.markdown(
-        """
+        f"""
     <div class="card">
-        <h4>🎮 Minecraft HKP 地圖 v1.2 正式開放下載！</h4>
-        <p>校園地圖已更新至 1.2 版本，修復了部分建築細節並增加了互動元素，歡迎前往下載區體驗。</p>
+        <h4>🎮 Minecraft HKP 雲端資料夾已全面開放！</h4>
+        <p>同學們現在可以直接透過 <a href="{DRIVE_MINECRAFT_URL}" target="_blank">Google Drive 雲端連結</a> 下載最新校園地圖與資源。</p>
     </div>
     <div class="card">
-        <h4>📱 官方社群平台全線開通</h4>
-        <p>九九頻道現已同步進駐 YouTube、IG、Facebook、Threads、抖音及 Bilibili，歡迎大家點擊關注！</p>
+        <h4>📸 Instagram 官方帳號開啟！</h4>
+        <p>歡迎追蹤 <a href="{IG_URL}" target="_blank">@hkp_99channel</a>，即時獲取頻道限時動態與最新消息！</p>
     </div>
     """,
         unsafe_allow_html=True,
@@ -323,8 +286,8 @@ elif menu == "⚙️ 開發背景與系統資訊":
     濠江英才九九頻道 (HKP 99 Channel) 官方網站旨在為師生及觀眾提供一個整合頻道節目、社群媒體動態以及校園創作資源（如 Minecraft 專案下載）的跨平台展示基地。
 
     ### 🛡️ 準確性與穩定性驗證 (Accuracy Validation)
-    - **社群媒體整合**：網羅 YouTube、IG、FB、Threads、抖音及 Bilibili 等主流平台。
-    - **資源下載驗證**：Minecraft 專區支援直接檔下載（`.zip`, `.mcworld`）與外部備用雲端連結。
+    - **社群媒體整合**：已綁定官方 Instagram (`@hkp_99channel`)。
+    - **資源下載驗證**：已將「Minecraft HKP 下載區」直連至官方 Google Drive 共享資料夾。
     - **時區機制驗證**：系統整合 `pytz` 時區庫，精確顯示澳門當地時間 (`Asia/Macau`)。
     """
     )
@@ -335,6 +298,6 @@ elif menu == "⚙️ 開發背景與系統資訊":
 # 4. 頁腳 (Footer)
 st.markdown("---")
 st.markdown(
-    f'<div class="footer-text">© 2026 濠江英才九九頻道 (HKP 99 Channel) | Powered by Streamlit | 最後更新：{current_time_str}</div>',
+    f'<div class="footer-text">© 2026 濠江英才九九頻道 (HKP 99 Channel) | Instagram: @hkp_99channel | Powered by Streamlit | 最後更新：{current_time_str}</div>',
     unsafe_allow_html=True,
 )
